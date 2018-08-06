@@ -1,0 +1,31 @@
+Feature: Clients are able to manage their product backlog contents
+  Scenario: the client check the project is not exist, by make a post request with project name
+    Given the <project_name>
+    When the client sends a post request to /project/check_by_name
+    Then the client receives response status code of 200
+    And the response body should return a boolean, with "false" as value
+  Scenario: client makes a post request to /project/create a project
+    Given the <project_json> as a post body
+    When the client sends a post request to /project/create
+    Then the client receives response status code of 200
+    And the response should contains projectid
+  Scenario: the client retrieves the existing project with spesific id
+    Given the existing project id with value <project_id>
+    When the client send a get request to /project/<project_id>
+    Then the client receives response with status code of 200
+    And the response body should a projectid
+  Scenario: the client updates the project data and return an updated project data
+    Given updated <update_data_project_json> with spesific <project_id>
+    When the client send a put request to /project/update/<project_id> with the <update_data_project_json> as a json body
+    Then the client receives the response with status code of 200
+    And the response body should contains the name
+  Scenario: the client removes the project data with spesific id
+    Given the existing <project_id>
+    When  the client send a get request to /project/delete/<project_id>
+    Then the client receives the response with status code of 404 indicates its not around
+  Scenario: the client sends a post to create a story inside the existing project
+    Given the existing <project_id>
+    When the client sends a post request to /story/create with <story_json> as a body
+    Then the client receive the response with status code of 200
+    And the response body should cointains the storyid
+
